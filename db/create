@@ -1,0 +1,447 @@
+create table seasons (
+	id		int		primary key,
+	name		text,
+	start		date,
+	finish		date
+);
+
+create table printers (
+	id		int		primary key,
+	name		text,
+	command		text
+);
+
+create table roles (
+	id		int		primary key,
+	name		text,
+	description	text
+);
+
+create table users (
+	id		serial		primary key,
+	login		text		unique,
+	name		text,
+	surname		text,
+	person		int		references persons (id),
+	role		int		references roles (id),
+	season		int		references seasons (id),
+	printer		int		references printers (id)
+);
+
+create table categories (
+	id		int		primary key,
+	name		text,
+	description	text
+);
+
+create table fields (
+	id		int		primary key,
+	name		text,
+	description	text
+);
+
+create table types (
+	id 		int		primary key,
+	name		text
+);
+
+create table insurances (
+	id		int		primary key,
+	name		text,
+	shortly		text
+);
+
+
+create table persons (
+	id		serial,
+
+	name		text,
+	surname		text,
+	photo		oid,
+
+	birthdate	date,
+	birthnumber	text,
+	sex		char,
+	animator	bool,
+
+	street		text,
+	town		text,
+	zip		text,
+
+	email		text,
+	tel		text,
+	mobil		text,
+
+	mother		text,
+	father		text,
+	pemail		text,
+	pmobil		text,
+	infomail	bool		default 't',
+
+	health		text,
+	insurance	int 		references insurances (id),
+	hobbies		text,
+	note		text,
+
+	created		timestamp,
+	updated		timestamp
+);
+
+create table rooms (
+	id		serial,
+	name		text,
+	description	text,
+	capacity	int,
+	manager		int		references persons (id)
+);
+
+create table activities (
+	id		serial,
+
+	name		text,
+	type		int		references types (id),
+	category	int		references categories (id),
+	field		int		references fields (id),
+	description	text,
+
+	min		int,
+	max		int,
+	youngest	int,
+	oldest		int,
+	sex		char,
+	condition	text,
+	note		text,
+
+	start		date,
+	finish		date,
+
+	price		int,
+	deposit		int,
+	fixed		bool,
+
+	pub		bool,
+	open		bool,
+	card		bool,
+
+	season		int		references seasons (id),
+
+	created		timestamp,
+	updated		timestamp
+);
+
+create table cards (
+	id		serial,
+	person		int		references persons (id),
+	season		int		references seasons (id),
+	printed		timestamp,
+	created		timestamp
+);
+
+create table lead (
+	leader		int		references persons (id),
+	rank		int,
+	activity	int		references activities (id) on delete cascade
+);
+
+create table placed (
+	id		serial,
+	activity	int		references activities (id) on delete cascade,
+	room		int		references rooms (id),
+	detail		text,
+	start		time,
+	finish		time,
+	day		smallint
+);
+
+create table registrations (
+	id		serial,
+	person		int		references persons (id),
+	activity	int		references activities (id),
+	price		int,
+	start		date,
+	finish		date,
+	registrar	int		references persons (id),
+	canceller	int		references persons (id),
+	created		timestamp,
+	cancelled	timestamp
+);
+
+create table payments (
+	id		serial,
+	registration	int		references registrations (id),
+	amount		int,
+	collector	int		references persons (id),
+	created		timestamp,
+	printed		timestamp
+);
+
+create table setup (
+	round_rate		int,
+	confirm_time		int,
+	free_activities_text,	text,
+	fake_time,		timestamp
+);
+
+
+
+
+
+
+
+create view placed_view as
+	select p.id, p.activity, p.room, p.detail, p.start, p.finish, p.day,
+		coalesce(a.start, s.start) as date_start,
+		coalesce(a.finish, s.finish) as date_finish,
+		a.season, a.type, a.pub
+	from
+		placed p
+		join
+		activities a
+			on p.activity = a.id
+		join
+		seasons s
+			on a.season = s.id;
+
+
+
+create view activities_view as
+	select a.id, a.name, a.type, a.category, a.field, a.description, a.min, a.max,
+		a.youngest, a.oldest, a.sex, a.condition, a.note, a.price, a.deposit, a.fixed, a.pub, a.open,
+		a.card, a.season, a.created, a.updated,
+		coalesce(a.start, s.start) as start,
+		coalesce(a.finish, s.finish) as finish
+	from
+		activities a
+		join
+		seasons s
+		on a.season = s.id;
+
+
+
+create view registrations_view as
+	select r.id, r.person, r.activity, r.price, a.deposit, r.start, r.finish, r.registrar, r.canceller, r.created, r.cancelled,
+		p.name as person_name, p.surname as person_surname,
+		a.name as activity_name, a.season, a.pub, a.open, a.card, a.note as activity_note,
+		(case when r.finish is null
+			then a.finish - r.start + 1
+			else r.finish - r.start
+		end) as days,
+		a.finish - a.start + 1 as alldays,
+
+		(case when a.fixed
+			then -- when fixed price
+				(case when r.finish is null
+					then r.price -- all amount
+					else 0 -- or nothing
+				end)
+			else -- when relative, count relative amount
+				round(1.0 * r.price *
+					(case when r.finish is null
+						then a.finish - r.start + 1
+						else r.finish - r.start
+					end)
+					/ (a.finish - a.start + 1)
+					/ s.round_rate
+				) * s.round_rate
+			end
+		) as pay,
+
+		sum(y.amount) as payed
+
+		from
+			setup s,
+			persons p
+		join
+			registrations r
+				on p.id = r.person
+		join
+			activities_view a
+				on a.id = r.activity
+		left outer join
+			payments y
+				on r.id = y.registration
+	group by r.id, r.person, r.activity, r.price, a.deposit, r.start, r.finish, r.registrar, r.canceller, r.created, r.cancelled,
+		p.name, p.surname, a.name, a.season, a.pub, a.open, a.card, a.note, a.start, a.finish, pay;
+
+
+
+-- registrations including deposits
+create view registrations_complete as
+	select id, person, activity, price, start, finish, registrar, canceller, created, cancelled,
+	person_name, person_surname, activity_name, activity_note, season, card, days, alldays, payed,
+	(case when (deposit = 0 or deposit > 0 and deposit < pay)
+		then pay
+		else (case when price < deposit
+			then price
+			else deposit
+			end
+		)
+		end
+	) as pay
+
+	from registrations_view;
+
+
+
+create view registrations_active as
+	select * from registrations where finish is null;
+
+-- these are activities including those finished in the future (and payed)
+create view registrations_really_active as
+	select * from registrations_view where
+		(finish is null or
+			(finish <> start and finish > CURRENT_DATE)
+		) and payed is not null;
+-- varianta:	) and (payed > 0 or payed = pay);
+
+-- these are activities including those finished in the future including unconfirmed
+create view registrations_really_active_including_unconfirmed as
+	select * from registrations_view where
+		(finish is null or
+			(finish <> start and finish > CURRENT_DATE)
+		);
+
+create view activities_free as
+	select a.id, a.name, a.season, a.type, a.category, a.pub, a.open, a.card, a.price, a.min, a.max, a.max - count(r.id) as free, count(r.id) as count
+		from activities a
+		left outer join
+		registrations r
+		on a.id = r.activity and (
+			r.finish is null or
+			(r.finish <> r.start and r.finish > CURRENT_DATE)
+		)
+		group by a.id, a.name, a.season, a.type, a.category, a.pub, a.open, a.card, a.price, a.max, a.min;
+
+-- anebo vcetne serazeni podle casu (ale zatim nefunguje)
+create view activities_free as
+	select a.id, a.name, a.season, a.type, a.category, a.pub, a.open, a.card, a.price, a.min, a.max, a.max - count(r.id) as free, count(r.id) as count,
+		min(p.day) as minday, (select min(start) from placed q where (q.day = min(p.day) or min(p.day) is null) and q.activity = a.id) as minstart
+		from activities a
+		left outer join
+			placed p on p.activity = a.id
+		left outer join
+			registrations r
+			on a.id = r.activity and (
+				r.finish is null or
+				(r.finish <> r.start and r.finish > CURRENT_DATE)
+			)
+		group by a.id, a.name, a.season, a.type, a.category, a.pub, a.open, a.card, a.price, a.max, a.min;
+
+
+create view activities_active as
+	select * from activities
+		where open and pub;
+
+
+create view cards_pending as
+	select * from cards where printed is null;
+
+create view payments_view as
+	select p.id, p.amount, p.collector, p.created, p.printed, a.season from
+		payments p
+		join
+		registrations r
+			on p.registration = r.id
+		join
+		activities a
+			on r.activity = a.id;
+
+-- doesn't work around new year!
+create view persons_rich as
+	select p.*,
+		case when
+			date(
+				extract (year from current_date) || '-' ||
+				extract (month from birthdate) || '-' ||
+				extract (day from birthdate)
+			) - current_date < 0
+		then
+			date(
+				extract (year from current_date) + 1 || '-' ||
+				extract (month from birthdate) || '-' ||
+				extract (day from birthdate)
+			) - current_date
+		else
+			date(
+				extract (year from current_date) || '-' ||
+				extract (month from birthdate) || '-' ||
+				extract (day from birthdate)
+			) - current_date
+		end
+
+		as birthday,
+		extract (year from current_date) -
+		extract (year from birthdate) +
+			case when
+				date(
+					extract (year from current_date) || '-' ||
+					extract (month from birthdate) || '-' ||
+					extract (day from birthdate)
+				) - current_date < 0
+			then 1
+			else 0
+			end
+		as age
+		from persons p;
+
+create view persons_age as
+	select p.*, extract(year from age(birthdate || ' 0:0:0')) as age
+	from persons p;
+
+
+
+
+-- insert some values
+
+insert into setup values (10, 7);
+
+insert into seasons values (1, 'testovací', '2000-09-01', '2001-06-30');
+insert into seasons values (2, '2001-2002', '2001-09-01', '2002-06-30');
+insert into seasons values (3, '2002-2003', '2002-09-01', '2003-06-30');
+insert into seasons values (4, '2003-2004', '2003-09-01', '2004-06-30');
+insert into seasons values (5, '2004-2005', '2004-09-01', '2005-06-30');
+
+insert into printers values (0, 'netisknout', NULL);
+insert into printers values (1, 'půjčovna', 'lpr -Ppu');
+insert into printers values (2, 'nasa', 'lpr -Pnasa');
+
+insert into roles values (0, 'administrátor', 'může všechno (spravovat uživatele systému)');
+insert into roles values (1, 'editor', 'může vytvářet a editovat nové kroužky, místnosti');
+insert into roles values (2, 'zapisovatel', 'může zapisovat lidi, přihlašovat do kroužků');
+insert into roles values (3, 'prohlížitel', 'může jen prohlížet kdo co kdy kde');
+insert into roles values (4, 'informátor', 'může prohlížet data týkající se informování o kroužcích');
+insert into roles values (5, 'host', 'může jen obhlížet seznamy kroužků?');
+
+insert into users (login, name, surname, role, season, printer) values ('login', 'Name', 'Surname', 0, 3, 1);
+insert into persons (name, surname, birthnumber, photo, created) values ('Name', 'Surname', '1111111111', 1, now());
+
+insert into rooms (name, description, capacity) values ('sál', 'sál pod kostelem', 200);
+insert into rooms (name, description, capacity, manager) values ('keramika', 'učebna keramiky', 20, 1);
+insert into rooms (name, description, capacity) values ('počítačovna', 'učebna počítačů', 6);
+
+insert into categories (id, name) values (1, 'hudební');
+insert into categories (id, name) values (2, 'dramatické');
+insert into categories (id, name) values (3, 'pohybové');
+insert into categories (id, name) values (4, 'technické');
+insert into categories (id, name) values (5, 'výtvarné');
+insert into categories (id, name) values (6, 'vzdělávací');
+insert into categories (id, name) values (99, 'ostatní');
+
+insert into types (id, name) values (1, 'jednorázové');
+insert into types (id, name) values (2, 'pravidelné');
+insert into types (id, name) values (3, 'ostatní');
+
+insert into insurances (id, shortly, name) values (111, 'VZP',  'Všeobecná zdravotní pojišťovna');
+insert into insurances (id, shortly, name) values (201, 'VOZP', 'Vojenská zdravotní pojišťovna');
+insert into insurances (id, shortly, name) values (205, 'HZP',  'Hutnická zaměstnanecká pojišťovna');
+insert into insurances (id, shortly, name) values (207, 'OZP',  'Oborová zdravotní pojišťovna');
+insert into insurances (id, shortly, name) values (209, 'ZPŠ',  'Zaměstnanecká pojišťovna Škoda');
+insert into insurances (id, shortly, name) values (211, 'ZPMV', 'Zdravotní pojišťovna Ministerstva vnitra');
+insert into insurances (id, shortly, name) values (213, 'RBP',  'Revírní bratrská pokladna');
+insert into insurances (id, shortly, name) values (217, 'ZPMA', 'Zdravotní pojišťovna Metal-Aliance');
+insert into insurances (id, shortly, name) values (222, 'ČNZP', 'Česká národní zdravotní pojišťovna');
+
+insert into activities (name, description, min, max, youngest, oldest, condition, price, fixed, pub, season, category, room, created, updated)
+values ('Počítače - linux', 'Základy práce s linuxem', 3, 6, 12, 16, 'základy s PC', 600, 'f', 't', 1, 3, 3, now(), now());
+
+insert into placed (activity, room, start, finish, day) values (1, 3, '14:00', '14:50', 1);

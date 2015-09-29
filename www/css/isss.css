@@ -1,0 +1,541 @@
+
+body {
+	background-color: white;
+	font-size: 70%;
+	font-family: tahoma, sans-serif;
+}
+
+
+/******* main *******/
+
+body.main {
+	background-color: #eee;
+	padding: 1em;
+	vertical-align: top;
+}
+
+
+/******* panel *******/
+
+body.panel {
+	background-color: black;
+	color: white;
+
+	text-align: center;
+	vertical-align: top;
+
+	font-size: 80%;
+	padding: 0px;
+	margin: 1em 0px;
+}
+
+body.panel div {
+}
+
+body.panel input, body.panel select {
+	background-color: #333;
+	color: white;
+	/*font-size: 90%;*/
+	border: solid 1px #777;
+	padding-left: 2px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	margin-bottom: 1em;
+}
+
+body.panel a {
+	color: #fd0;
+	text-decoration: none;
+}
+
+body.panel a:hover {
+	color: #fd0;
+	font-weight: bold;
+}
+
+body.panel div {
+	padding-top: 0px;
+	padding-bottom: 3px;
+}
+
+body.panel hr {
+	margin: 1ex 1em;
+}
+
+body.setup {
+	padding: 1em 0px;
+	margin: 0px;
+}
+
+
+/******* general *******/
+
+li {
+	list-style-type: square;
+}
+
+li.novinka {
+	color: green;
+}
+
+table.card p {
+	width: 55ex;
+	margin-left: 3px;
+}
+
+
+/******* inputs *******/
+
+body.main input, body.main textarea, body.main select, body.man textarea {
+	border: solid 1px #aaa;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus {
+	border-color: #777 !important;
+}
+
+body.main select {
+	padding: 0px;
+}
+
+input[type=text] {
+}
+
+input[type=submit] {
+	border-color: #aaa;
+}
+
+input[type=submit]:hover {
+	background-color: #fd0 !important;
+}
+
+input[type=submit]:active {
+}
+
+body.main input.noborder {
+	border: none;
+	padding: 0px;
+}
+
+table.card input, table.card textarea {
+	background-color: #fafafa;
+}
+
+table.card textarea {
+	padding: 7px;
+}
+
+table.card input.noborder {
+	background-color: #fff;
+}
+
+span.cleaver input {
+	font-size: 80%;
+}
+
+input.save {
+	background-color: #aadafa;
+}
+
+input.save:hover {
+	background-color: #fd0;
+}
+
+
+/******* scraps *******/
+
+table.scraps {
+	margin-bottom: 1em;
+	border-collapse: separate;
+	border-spacing: 1px 3px;
+}
+
+table.scraps td, table.scraps th {
+	/*font-size: 90%;*/
+	padding: 3px 7px 3px 7px;
+}
+
+table.scraps td {
+	background-color: #ddd;
+}
+
+table.scraps tr:hover td {
+	/* background-color: #d3d3dd; */
+	background-color: #cfcfdd;
+}
+
+table.scraps a {
+	text-decoration: none;
+	/*font-weight: bolder;*/
+}
+
+table.scraps div.section {
+	margin-top: 1ex;
+}
+
+table.scraps tr.head td {
+	font-size: 120%;
+	background-color: #ccc;
+}
+
+table.scraps tr.space {
+	height: 3ex;
+}
+
+table.scraps table {
+	border-spacing: 0px;
+}
+
+table.scraps table td, table.scraps table th {
+	border-left: 1px solid #aaa;
+}
+
+table.scraps table td:first-child, table.scraps table th:first-child {
+	border-left: none;
+}
+
+table.scraps td.footer {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+
+
+/******* other defaults *******/
+
+hr {
+	color: black;
+	background-color: black;
+	border-style: ridge;
+}
+
+
+td {
+	margin-left: 7px;
+	background-color: #eee;
+}
+
+span.isss {
+	font-size: 300%;
+}
+
+a {
+	/*color: #76a;*/
+	color: #538;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #316;
+	/*background-color: #edf;*/
+}
+
+input {
+	vertical-align: middle;
+}
+
+div.heading {
+	font-size: 222%;
+	font-weight: bold;
+	margin-bottom: 1ex !important;
+	padding: 3px;
+	border-bottom: groove black 2px;
+
+}
+
+div.heading a {
+	color: black;
+}
+
+div.section {
+	font-size: 170%;
+	font-weight: bold;
+	margin-bottom: 1ex;
+	margin-top: 1em;
+}
+
+/******* card *******/
+
+table.card {
+	border: solid 1px black;
+	margin-bottom: 1em;
+	margin-top: 1em;
+	/*width: 555px;*/
+	width: 90%;
+	border-spacing: 2px;
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	page-break-after: always;
+}
+
+table.card th, table.card td {
+	/*font-size: 90%;*/
+	padding: 1em;
+	background-color: white;
+	vertical-align: top;
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+}
+
+table.card th {
+	text-align: right;
+	vertical-align: top;
+}
+
+table.card table th {
+	padding: 3px;
+	width: 10ex;
+	/*border: solid 1px black;*/
+}
+
+
+table.card table th.centered {
+	text-align: left;
+	width: auto;
+}
+
+
+
+table.card div.heading {
+	font-size: 170%;
+	margin-bottom: 0px !important;
+	border-bottom: none;
+}
+
+table.card table th {
+	padding: 2px;
+	/*border: solid 1px black;*/
+}
+
+table.card table td {
+	padding: 2px 7px 2px 2px;
+	/*border: solid 1px black;*/
+}
+
+table.form td, table.form th {
+	padding: 1ex;
+}
+
+
+/******* scraps in cards *******/
+
+table.card table.scraps {
+	margin-bottom: 1em;
+	border-collapse: separate;
+	border-spacing: 0px 7px;
+}
+
+table.card table.scraps td {
+	/*font-size: 90%;*/
+	border-right: solid 3px #ddd;
+}
+
+table.card table.scraps th {
+	/*font-size: 90%;*/
+	text-align: center;
+}
+
+table.card table.scraps td {
+	background-color: #eee;
+	padding: 7px;
+}
+
+/******* navigation *******/
+
+table.navig {
+	border: solid 1px black;
+	margin: 1em;
+	background-color: #ddd;
+}
+
+table.navig th, table.navig td {
+	/*font-size: 90%;*/
+	padding: 1ex;
+	/*border: 1px solid black;*/
+}
+
+table.navig th {
+	text-align: right;
+}
+
+table.navig th.centered {
+	text-align: center;
+}
+
+table.navig td {
+	vertical-align: top;
+}
+
+table.navig div.section {
+	margin-bottom: 0ex;
+	margin-top: 0em;
+}
+
+
+span.error, span.message, span.info {
+	font-size: 90%;
+	color: white;
+	/*margin: 1ex;*/
+	padding: 0.7ex;
+	line-height: 3ex;
+}
+
+span.error {
+	background-color: #a00;
+}
+
+span.message {
+	background-color: #137;
+}
+
+span.info {
+	background-color: #999;
+}
+
+.prdofon {
+	background-color: #adf;
+}
+
+img.photo {
+	padding: 7px;
+	border: solid 1px black;
+	margin: 3em;
+	background-color: white;
+	width: 115px;
+	height: 153px;
+}
+
+img.miniphoto {
+	/*width: 50%;*/
+	width: 57px;
+	height: 77px;
+	border: solid 1px #333;
+	background-color: white;
+	padding: 1px;
+	margin: 3px;
+}
+
+img.miminiphoto {
+	/*width: 50%;*/
+	width: 29px;
+	height: 38px;
+	border: solid 1px #333;
+	background-color: white;
+	padding: 1px;
+}
+
+.bar {
+	background-color: #adf;
+}
+
+/******* schedules *******/
+
+table.schedule {
+	font-size: 90%;
+	border-spacing: 2px 2px;
+	z-index: 3;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+table.schedule:hover {
+	z-index: 7;
+}
+
+
+table.schedule td {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+
+table.schedule td.heading {
+	text-align: center;
+	padding-right: 2px;
+	overflow: hide;
+}
+
+table.schedule table {
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+	border-spacing: 0px;
+	font-size: 90%;
+}
+
+table.schedule td.since {
+}
+
+table.schedule td.until {
+	text-align: right;
+	padding-right: 3px;
+}
+
+div.schedule {
+	font-size: 200%;
+	background-color: #f7f7f7;
+	padding: 12px;
+}
+
+/* coloring the tables */
+
+table.public { background-color: #adf; }
+table.public td.heading { background-color: #def; }
+
+table.internal { background-color: #dcf; }
+table.internal td.heading { background-color: #f0ebff; }
+
+table.leading { background-color: #fd0;  }
+table.leading td.heading { background-color: #fea; }
+/*
+table.lead a { color: #f50; }
+*/
+
+
+span.sup {
+	position: relative;
+	bottom: 3px;
+	padding-left: 1px;
+}
+
+/*
+option[selected="selected"] {
+	color: #fd0; !important
+}
+*/
+
+
+/******* activity load (percent bar) *******/
+
+div.load {
+	border: solid 1px #aaa;
+	position: relative;
+	width: 9ex;
+	height: 1.3em;
+	background-color: #ddd;
+}
+
+div.load div.bar {
+	position: absolute;
+	height: 100%;
+	top: auto;
+	bottom: auto;
+	background-color: #ccc;
+	border-right: 1px solid #aaa;
+}
+
+div.load div.fraction {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	vertical-align: center;
+}
+
+
+/******* distinct counts for statistics (without repeat) *******/
+
+span.distinct {
+	color: #888;
+}

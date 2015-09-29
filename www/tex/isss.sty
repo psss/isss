@@ -1,0 +1,147 @@
+
+\input epsf
+
+\nopagenumbers
+\rightskip 0pt plus 1fill
+
+\font\f			csss8
+\font\emm		csssbx9 at 8pt
+\font\ff		csssbx12
+\font\fff		csssbx17
+\font\ffff		csssbx17 at 24pt
+\font\fffff		csssbx17 at 50pt
+\font\ffffff		csssbx17 at 3cm
+\font\itt		cssl12
+\font\sss		csss12
+\font\ttt		cstt12
+\font\foot		csssq8
+\font\fhlava		csb12
+
+\def\hfilll{\hskip 0pt plus 1filll}
+
+% nastavení pro doklady
+\def\doklady{
+	\hoffset -1.54cm
+	\voffset -1.54cm
+	\hsize 19cm
+	\vsize 27cm
+
+	\parindent 0pt
+	\parskip 7pt
+	\baselineskip 9pt
+
+
+	\font\fnormal		csss8
+	\font\fbold		csssbx9 at 8pt
+	\font\fheading		csssbx12
+
+	\fnormal
+}
+
+% nastaveni pro prukazky
+\def\prukazky{
+	\hoffset -0.95cm
+	\voffset -0.95cm
+	\hsize 19cm
+	\vsize 29cm
+
+	\parindent 0pt
+	\parskip 0pt
+	\baselineskip 12pt
+
+	\leftskip 0pt
+
+	\font\fnormal		csr9
+	\font\fbold		lcsss8 at 6pt
+	\font\fheading		csssbx12 at 11pt
+	\font\fname		cscsc17
+	\font\fmini		lcsss8 at 6pt
+
+	\fnormal
+}
+
+% nastaveni pro tridnice
+\def\tridnice{
+	\voffset -1.84cm
+	\hoffset -1.54cm
+	\vsize 19cm
+	\hsize 26cm
+
+	\parindent 0pt
+	\parskip 0pt
+	\baselineskip 16pt
+
+	\leftskip 0pt
+
+	\font\fnormal		csr9
+	\font\fbold		csssbx9
+	\font\fheading		csb17 at 20pt
+	\font\fname		cscsc17
+	\font\fmini		lcsss8 at 6pt
+	\font\fmega		csb17 at 77pt
+	\fnormal
+
+	\def\obalka{
+		\font\fnormal	csr12 at 14pt
+		\font\fbold	csb12 at 14pt
+		\fnormal
+	}
+
+	\def\prvni{
+		\baselineskip	14pt
+		\font\fnormal	csr12
+		\font\fbold	csb12
+		\fnormal
+	}
+}
+
+% nastaveni pro rozvrhy
+\def\rozvrh{
+	%\hoffset -1.54cm
+	\voffset -1cm
+	%\hsize 12cm
+	\vsize 26cm
+
+	\parindent 0pt
+	\baselineskip 12pt minus 4pt
+
+	\font\fnormal		csr12
+	\font\fbold		csb12
+	\font\fheading		csb17 at 30pt
+	\font\fmini		lcsss8 at 6pt
+
+	\fnormal
+}
+
+\def\hlavicka{
+	Salesiánské středisko mládeže\hfilll tel: 541 213 110\break
+	Foerstrova 2\hfilll www: brno.sdb.cz\break
+	Brno-Žabovřesky\hfilll email: info@brno.sdb.cz\break
+	616 00
+}
+
+\def\hlava{
+	\hbox{
+		\vbox{
+			\hsize 1.7cm
+			\vskip 10mm
+			\epsfysize=1.5cm\epsfbox{logo.eps}
+			\hfill
+		}%
+		\vbox{%
+			\hsize 7cm%
+			\fhlava%
+			\baselineskip 14pt%
+			Salesiánské středisko mládeže\break
+			dům dětí a mládeže\break
+			Brno-Žabovřesky
+		}
+	}
+}
+
+\def\nadpis#1{{
+	\fheading #1 \hrule
+}}
+
+\def\em#1{{\fbold#1}}
+\def\thinskip{\hskip .5ex}
